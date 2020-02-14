@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, StyleSheet, Text, Image, ScrollView, Button } from 'react-native'
 import Colors from '../../constants/Colors';
 import { useSelector, useDispatch } from 'react-redux'
@@ -13,6 +13,16 @@ const ProductDetailScreen = (props) => {
     const productId = props.navigation.getParam('productId');
     const availableProducts = useSelector(state => state.productReducer.availableProducts);
     const selectedProduct = availableProducts.find(product => product.id === productId);
+    const count = useSelector(state => {
+        let counter = 0;
+        for (const key in state.cartReducer.items) {
+            counter += state.cartReducer.items[key].quantity;
+        }
+        return counter;
+    });
+    useEffect(() => {
+        props.navigation.setParams({ cartItemCount: count })
+    }, [count]);
 
     return <ScrollView>
         <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
@@ -28,13 +38,17 @@ const ProductDetailScreen = (props) => {
 
 ProductDetailScreen.navigationOptions = (navData) => {
     const productTitle = navData.navigation.getParam('productTitle');
+    const cartItemCount = navData.navigation.getParam('cartItemCount');
     return {
         headerTitle: productTitle,
-        headerRight: <HeaderButtons HeaderButtonComponent={HeaderButton}>
-            <Item title='Menu' iconName='ios-cart' onPress={() => {
-                navData.navigation.navigate('Cart')
-            }} />
-        </HeaderButtons>
+        headerRight: <View style={styles.headerLeft}>
+            <HeaderButtons HeaderButtonComponent={HeaderButton} >
+                <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() => {
+                    navData.navigation.navigate('Cart')
+                }} />
+            </HeaderButtons>
+            <Text style={styles.label}>{cartItemCount}</Text>
+        </View>
     }
 }
 
@@ -59,6 +73,16 @@ const styles = StyleSheet.create({
     actions: {
         marginVertical: 10,
         alignItems: 'center'
+    },
+    headerLeft: {
+        flexDirection: 'row'
+    },
+    label: {
+        color: Colors.accentColor,
+        fontFamily: 'open-sans-bold',
+        marginRight: 20,
+        marginLeft: - 16,
+        alignSelf: 'baseline'
     }
 });
 
