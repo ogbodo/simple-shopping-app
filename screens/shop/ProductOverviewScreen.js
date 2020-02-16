@@ -57,7 +57,9 @@ ProductOverviewScreen.navigationOptions = (navData) => {
                     navData.navigation.navigate('Cart')
                 }} />
             </HeaderButtons>
-            <Text style={styles.label}>{cartItemCount}</Text>
+            <View style={styles.labelContainer}>
+                <Text style={styles.label}>{cartItemCount}</Text>
+            </View>
         </View>
     }
 }
@@ -66,12 +68,19 @@ const styles = StyleSheet.create({
     headerLeft: {
         flexDirection: 'row'
     },
-    label: {
-        color: Colors.accentColor,
-        fontFamily: 'open-sans-bold',
+    labelContainer: {
+        backgroundColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor,
         marginRight: 20,
         marginLeft: - 16,
-        alignSelf: 'baseline'
+        height: '70%',
+        alignSelf: 'baseline',
+        borderRadius: 40
+
+    },
+    label: {
+        color: Platform.OS === 'ios' ? 'white' : Colors.primaryColor,
+        fontFamily: 'open-sans-bold',
+
     }
 })
 
