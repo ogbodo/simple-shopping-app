@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../../components/UI/HeaderButton'
 import { addToCart } from '../../store/actions/cart-action';
+import CartLabel from '../../components/UI/CartLabel';
 
 const ProductDetailScreen = (props) => {
     const dispatch = useDispatch()
@@ -37,17 +38,18 @@ const ProductDetailScreen = (props) => {
 }
 
 ProductDetailScreen.navigationOptions = (navData) => {
+    const onCartClicked = () => {
+        navData.navigation.navigate('Cart')
+    }
     const productTitle = navData.navigation.getParam('productTitle');
     const cartItemCount = navData.navigation.getParam('cartItemCount');
     return {
         headerTitle: productTitle,
         headerRight: <View style={styles.headerLeft}>
             <HeaderButtons HeaderButtonComponent={HeaderButton} >
-                <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() => {
-                    navData.navigation.navigate('Cart')
-                }} />
+                <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={onCartClicked} />
             </HeaderButtons>
-            <Text style={styles.label}>{cartItemCount}</Text>
+            <CartLabel cartItemCount={cartItemCount} onPress={onCartClicked} />
         </View>
     }
 }

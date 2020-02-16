@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react'
-import { FlatList, Platform, View, Text, StyleSheet } from 'react-native'
+import React, { useEffect } from 'react'
+import { FlatList, Platform, View,  StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
-import { HeaderButtons, Item } from 'react-navigation-header-buttons'
-import HeaderButton from '../../components/UI/HeaderButton'
+import { HeaderButtons, Item } from 'react-navigation-header-buttons';
+import HeaderButton from '../../components/UI/HeaderButton';
 import { addToCart } from '../../store/actions/cart-action';
-import Colors from '../../constants/Colors';
+import { loadProductAction } from '../../store/actions/product-action';
+import PRODUCTS from '../../data/dummy-data';
+import CartLabel from '../../components/UI/CartLabel';
 
 
 const ProductOverviewScreen = (props) => {
@@ -19,6 +21,10 @@ const ProductOverviewScreen = (props) => {
         }
         return counter;
     });
+    useEffect(() => {
+        dispatch(loadProductAction(PRODUCTS))
+    }, [PRODUCTS]);
+
     useEffect(() => {
         props.navigation.setParams({ cartItemCount: count })
     }, [count]);
@@ -43,6 +49,9 @@ const ProductOverviewScreen = (props) => {
 }
 
 ProductOverviewScreen.navigationOptions = (navData) => {
+    const onCartClicked = () => {
+        navData.navigation.navigate('Cart')
+    }
     const cartItemCount = navData.navigation.getParam('cartItemCount')
     return {
         headerTitle: ' All Products',
@@ -53,13 +62,9 @@ ProductOverviewScreen.navigationOptions = (navData) => {
         </HeaderButtons>,
         headerRight: <View style={styles.headerLeft}>
             <HeaderButtons HeaderButtonComponent={HeaderButton} >
-                <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={() => {
-                    navData.navigation.navigate('Cart')
-                }} />
+                <Item title='Menu' iconName={Platform.OS === 'android' ? 'md-cart' : 'ios-cart'} onPress={onCartClicked} />
             </HeaderButtons>
-            <View style={styles.labelContainer}>
-                <Text style={styles.label}>{cartItemCount}</Text>
-            </View>
+            <CartLabel cartItemCount={cartItemCount} onPress={onCartClicked} />
         </View>
     }
 }
