@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, StyleSheet, Button, FlatList, ScrollView } from 'react-native'
 import { useSelector } from 'react-redux'
 import Colors from '../../constants/Colors';
@@ -6,25 +6,19 @@ import CartItem from '../../components/shop/CartItem';
 import { useDispatch } from 'react-redux'
 import { removeFromCart } from '../../store/actions/cart-action';
 import { addOrderAction } from '../../store/actions/order-action';
+import extractCartItems from './utils';
+import showToast from '../../components/UI/toast';
 
 const CartScreen = () => {
     const totalAmount = useSelector(state => state.cartReducer.totalAmount);
     const dispatch = useDispatch();
-    const cartItems = useSelector(state => {
-        const transformedCartItems = [];
-
-        for (const key in state.cartReducer.items) {
-            transformedCartItems.push({
-                id: key,
-                productTitle: state.cartReducer.items[key].productTitle,
-                productPrice: state.cartReducer.items[key].productPrice,
-                quantity: state.cartReducer.items[key].quantity,
-                sum: state.cartReducer.items[key].sum
-            })
+    const cartItems = useSelector(state => extractCartItems(state.cartReducer.items));
+    const [wasAdded, setWasAdded] = useState(false)
+    useEffect(() => {
+        if (wasAdded) {
+            showToast()
         }
-        return transformedCartItems.sort((a, b) => a.key > b.key ? 1 : -1);
-    });
-
+    }, [wasAdded])
     return (<View style={styles.screen}>
         <View style={styles.summary}>
             <Text style={styles.summaryText}>
@@ -32,6 +26,7 @@ const CartScreen = () => {
             </Text>
             <Button title='Order Now' color={Colors.accentColor} disabled={cartItems.length === 0} onPress={() => {
                 dispatch(addOrderAction(cartItems, totalAmount))
+                setWasAdded(prevState => !prevState)
             }} />
         </View>
         <ScrollView>
@@ -40,10 +35,12 @@ const CartScreen = () => {
                 title={cartItem.productTitle}
                 key={cartItem.id}
                 amount={cartItem.sum}
+                deleteAble
                 onRemove={() => {
                     dispatch(removeFromCart(cartItem.id));
                 }} />)}
         </ScrollView>
+
         {/* <FlatList data={cartItems}
             keyExtractor={item => item.id}
             renderItem={(itemData) => {

@@ -1,24 +1,24 @@
 import React from 'react'
-import { View, StyleSheet, Text, Image, TouchableOpacity, Platform, TouchableNativeFeedback } from 'react-native'
+import { View, StyleSheet, Text, Image, TouchableOpacity, Platform, TouchableNativeFeedback, ScrollView } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Colors from '../../constants/Colors';
 
 const CartItem = (props) => {
     const TouchableComp = Platform.OS === 'android' && Platform.Version >= 21 ? TouchableNativeFeedback : TouchableOpacity;
-
     return <View style={styles.cartItem}>
         <View style={styles.itemData}>
             <Text style={styles.quantity}>{props.quantity}</Text>
             <Text style={styles.mainText}>{props.title}</Text>
+            {/* <View style={{ width: "60%", alignItems: 'center' }}><Text style={styles.mainText}>{props.title}</Text></View> */}
         </View>
         <View style={styles.itemData}>
             <Text style={styles.mainText}>${props.amount.toFixed(2)}</Text>
-            <TouchableComp onPress={props.onRemove} style={styles.deleteButton}>
+            {props.deleteAble && <TouchableComp onPress={props.onRemove} style={styles.deleteButton}>
                 <Ionicons
                     name={Platform.OS === 'android' ? 'md-trash' : 'ios-trash'}
                     size={23}
                     color='red' />
-            </TouchableComp>
+            </TouchableComp>}
         </View>
     </View>
 }
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: 20
     },
     itemData: {
         flexDirection: 'row',

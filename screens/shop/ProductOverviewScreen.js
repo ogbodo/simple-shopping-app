@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Platform, View, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
@@ -7,11 +7,18 @@ import HeaderButton from '../../components/UI/HeaderButton';
 import { addToCart } from '../../store/actions/cart-action';
 import { fetchProducts } from '../../store/actions/product-action';
 import CartLabel from '../../components/UI/CartLabel';
+import showToast from '../../components/UI/toast';
 
 
 const ProductOverviewScreen = (props) => {
     const dispatch = useDispatch();
-
+    const [wasAdded, setWasAdded] = useState(false)
+    useEffect(() => {
+        if (wasAdded) {
+            showToast();
+            setWasAdded(false)
+        }
+    }, [wasAdded])
     const availableProducts = useSelector(state => state.productReducer.products);
     const count = useSelector(state => {
         let counter = 0;
@@ -45,7 +52,8 @@ const ProductOverviewScreen = (props) => {
                 id={itemData.item.id}
                 onViewDetail={onViewDetails.bind(this, itemData)}
                 onAddToCart={() => {
-                    dispatch(addToCart(itemData.item))
+                    dispatch(addToCart(itemData.item));
+                    setWasAdded(true)
                 }} />}
         />
     </View>

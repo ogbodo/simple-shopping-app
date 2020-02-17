@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, StyleSheet, Text, Image, ScrollView, Button } from 'react-native'
 import Colors from '../../constants/Colors';
 import { useSelector, useDispatch } from 'react-redux'
@@ -7,12 +7,19 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../../components/UI/HeaderButton'
 import { addToCart } from '../../store/actions/cart-action';
 import CartLabel from '../../components/UI/CartLabel';
+import showToast from '../../components/UI/toast';
 
 const ProductDetailScreen = (props) => {
     const dispatch = useDispatch()
-
+    const [wasAdded, setWasAdded] = useState(false)
+    useEffect(() => {
+        if (wasAdded) {
+            showToast();
+            setWasAdded(false)
+        }
+    }, [wasAdded])
     const productId = props.navigation.getParam('productId');
-    const availableProducts = useSelector(state => state.productReducer.availableProducts);
+    const availableProducts = useSelector(state => state.productReducer.products);
     const selectedProduct = availableProducts.find(product => product.id === productId);
     const count = useSelector(state => {
         let counter = 0;
@@ -29,7 +36,8 @@ const ProductDetailScreen = (props) => {
         <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
         <View style={styles.actions}>
             <Button color={Colors.primaryColor} title='Add to cart' onPress={() => {
-                dispatch(addToCart(selectedProduct))
+                dispatch(addToCart(selectedProduct));
+                setWasAdded(true);
             }} />
         </View>
         <Text style={styles.price} >${selectedProduct.price.toFixed(2)}</Text>
