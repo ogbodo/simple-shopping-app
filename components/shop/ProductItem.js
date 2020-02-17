@@ -18,8 +18,8 @@ const ProductItem = (props) => {
                         <Text style={styles.price}>${props.price.toFixed(2)}</Text>
                     </View>
                     <View style={styles.actions}>
-                        <Button color={Colors.primaryColor} title='View Details' onPress={props.onViewDetail} />
-                        <Button color={Colors.primaryColor} title='Add To Cart' onPress={props.onAddToCart} />
+                        <Button testID={'viewDetailsBtn'} color={Colors.primaryColor} title='View Details' onPress={props.onViewDetail} />
+                        <Button testID={'addToCartBtn'} color={Colors.primaryColor} title='Add To Cart' onPress={props.onAddToCart} />
                     </View>
                 </View>
             </TouchableComp>

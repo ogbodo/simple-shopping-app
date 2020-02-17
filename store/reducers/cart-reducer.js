@@ -21,25 +21,25 @@ const cartReducer = (state = initialState, action) => {
                     state.items[addedProduct.id].quantity + 1,
                     productTitle,
                     productPrice,
-                    state.items[addedProduct.id].productPrice + productPrice)
+                    state.items[addedProduct.id].sum + productPrice)
             } else {
                 //we don't have the item in the cart
                 updatedOrNewCartItem = new CartItem(1, productTitle, productPrice, productPrice);
             }
-            return {
+            const updatedState = {
                 ...state,
                 items: { ...state.items, [addedProduct.id]: updatedOrNewCartItem },
                 totalAmount: state.totalAmount + productPrice
             }
+
+            return updatedState
         case REMOVE_FROM_CART:
-            const selectedPro = state.items[action.productId];
-
+            const existingProduct = state.items[action.productId];
             let updatedCartItems = undefined;
-            if (selectedPro.quantity > 1) {
-
+            if (existingProduct.quantity > 1) {
                 //This means we need to reduce it by one
                 const updatedCartItem = new CartItem(
-                    selectedPro.quantity - 1, selectedPro.productTitle, selectedPro.productPrice, state.items[action.productId].sum - selectedPro.productPrice);
+                    existingProduct.quantity - 1, existingProduct.productTitle, existingProduct.productPrice, state.items[action.productId].sum - existingProduct.productPrice);
                 updatedCartItems = { ...state.items, [action.productId]: updatedCartItem }
 
             } else {
@@ -51,7 +51,7 @@ const cartReducer = (state = initialState, action) => {
             return {
                 ...state,
                 items: { ...updatedCartItems },
-                totalAmount: state.totalAmount - selectedPro.productPrice > 0 ? state.totalAmount - selectedPro.productPrice : 0
+                totalAmount: state.totalAmount - existingProduct.productPrice > 0 ? state.totalAmount - existingProduct.productPrice : 0
             }
         default:
             return state;

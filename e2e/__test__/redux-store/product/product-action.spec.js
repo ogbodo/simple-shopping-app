@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import { reloadApp } from 'detox-expo-helpers'
 import configureMockStore from 'redux-mock-store';
-import { fetchProducts, LOAD_PRODUCTS, addProductsAction } from '../../../store/actions/product-action';
-import Product from '../../../models/product';
-import PRODUCTS from '../../../data/dummy-data';
+import { fetchProducts, addProductsAction, LOAD_PRODUCTS } from '../../../../store/actions/product-action';
+import Product from '../../../../models/product';
+import PRODUCTS from '../../../../data/dummy-data';
 
 
 describe('Product actions', () => {
