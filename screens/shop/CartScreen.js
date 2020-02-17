@@ -29,17 +29,23 @@ const CartScreen = () => {
                 setWasAdded(prevState => !prevState)
             }} />
         </View>
-        <ScrollView>
-            {cartItems.map(cartItem => <CartItem
-                quantity={cartItem.quantity}
-                title={cartItem.productTitle}
-                key={cartItem.id}
-                amount={cartItem.sum}
-                deleteAble
-                onRemove={() => {
-                    dispatch(removeFromCart(cartItem.id));
-                }} />)}
-        </ScrollView>
+        {cartItems.length > 0 ?
+            < ScrollView >
+                {
+                    cartItems.map(cartItem => <CartItem
+                        quantity={cartItem.quantity}
+                        title={cartItem.productTitle}
+                        key={cartItem.id}
+                        amount={cartItem.sum}
+                        deleteAble
+                        onRemove={() => {
+                            dispatch(removeFromCart(cartItem.id));
+                        }} />)
+                }
+            </ScrollView> :
+            <View>
+                <Text style={styles.emptyContainer}>Your cart is empty!</Text>
+            </View>}
 
         {/* <FlatList data={cartItems}
             keyExtractor={item => item.id}
@@ -85,8 +91,12 @@ const styles = StyleSheet.create({
     },
     amount: {
         color: Colors.primaryColor
+    },
+    emptyContainer: {
+        textAlign: 'center',
+        fontFamily: 'open-sans',
+        color: Colors.priceColor
     }
-
 })
 
 export default CartScreen

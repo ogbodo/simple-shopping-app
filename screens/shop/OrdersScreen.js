@@ -1,14 +1,15 @@
 import React from 'react'
-import { FlatList, Text, View, ScrollView } from 'react-native'
+import { FlatList, Text, View, StyleSheet } from 'react-native'
 import { useSelector } from 'react-redux'
 import { HeaderButtons, Item } from 'react-navigation-header-buttons'
 import HeaderButton from '../../components/UI/HeaderButton'
 import OrderItem from '../../components/shop/OrderItem';
+import Colors from '../../constants/Colors';
 
 const OrdersScreen = (props) => {
     const orders = useSelector(state => state.orderReducer.orders);
 
-    return <FlatList
+    return <View>{orders.length > 0 ? <FlatList
         data={orders}
         keyExtractor={(item) => item.id}
         renderItem={(itemData) => <View>
@@ -17,7 +18,14 @@ const OrdersScreen = (props) => {
                 date={itemData.item.date}
                 items={itemData.item.items}
             />
-        </View>} />
+        </View>} /> :
+        <View>
+            <Text style={styles.emptyContainer}>You have no orders yet!</Text>
+        </View>}
+    </View>
+
+
+
 }
 OrdersScreen.navigationOptions = (navData) => {
     return {
@@ -30,5 +38,13 @@ OrdersScreen.navigationOptions = (navData) => {
     }
 }
 
-
+const styles = StyleSheet.create({
+    emptyContainer: {
+        textAlign: 'center',
+        fontFamily: 'open-sans',
+        color: Colors.priceColor,
+        alignContent: 'center',
+        marginTop: '50%'
+    }
+})
 export default OrdersScreen;

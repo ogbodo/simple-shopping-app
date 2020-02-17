@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Platform, View, StyleSheet } from 'react-native';
+import { FlatList, Platform, View, StyleSheet, Text } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -8,6 +8,7 @@ import { addToCart } from '../../store/actions/cart-action';
 import { fetchProducts } from '../../store/actions/product-action';
 import CartLabel from '../../components/UI/CartLabel';
 import showToast from '../../components/UI/toast';
+import Colors from '../../constants/Colors';
 
 
 const ProductOverviewScreen = (props) => {
@@ -43,19 +44,23 @@ const ProductOverviewScreen = (props) => {
                 cartItemCount: count
             })
     }
-    return <View>
-        <FlatList data={availableProducts} renderItem={(itemData) =>
-            <ProductItem
-                imageUrl={itemData.item.imageUrl}
-                title={itemData.item.title}
-                price={itemData.item.price}
-                id={itemData.item.id}
-                onViewDetail={onViewDetails.bind(this, itemData)}
-                onAddToCart={() => {
-                    dispatch(addToCart(itemData.item));
-                    setWasAdded(true)
-                }} />}
-        />
+    return <View>{availableProducts.length > 0 ?
+        <FlatList data={availableProducts}
+            renderItem={(itemData) =>
+                <ProductItem
+                    imageUrl={itemData.item.imageUrl}
+                    title={itemData.item.title}
+                    price={itemData.item.price}
+                    id={itemData.item.id}
+                    onViewDetail={onViewDetails.bind(this, itemData)}
+                    onAddToCart={() => {
+                        dispatch(addToCart(itemData.item));
+                        setWasAdded(true)
+                    }} />}
+        /> :
+        <View>
+            <Text style={styles.emptyContainer}>No products to display!</Text>
+        </View>}
     </View>
 }
 
@@ -83,6 +88,11 @@ ProductOverviewScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
     headerLeft: {
         flexDirection: 'row'
+    },
+    emptyContainer: {
+        textAlign: 'center',
+        fontFamily: 'open-sans',
+        color: Colors.priceColor
     }
 })
 
