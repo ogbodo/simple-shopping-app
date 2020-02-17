@@ -42,6 +42,7 @@ const ProductOverviewScreen = (props) => {
                 imageUrl={itemData.item.imageUrl}
                 title={itemData.item.title}
                 price={itemData.item.price}
+                id={itemData.item.id}
                 onViewDetail={onViewDetails.bind(this, itemData)}
                 onAddToCart={() => {
                     dispatch(addToCart(itemData.item))

@@ -7,13 +7,13 @@ import ShopNavigator from './navigation/ShopNavigator'
 import { AppLoading } from 'expo'
 import * as Fonts from 'expo-font'
 import { enableScreens } from 'react-native-screens'
-import { composeWithDevTools } from 'redux-devtools-extension'
+// import { composeWithDevTools } from 'redux-devtools-extension'
 import orderReducer from './store/reducers/order-reducer';
 
 enableScreens(true);
 const rootReducer = combineReducers({ productReducer, cartReducer, orderReducer })
-const store = createStore(rootReducer, composeWithDevTools());
-// const store = createStore(rootReducer);
+// const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer);
 
 const fetchFonts = () => {
   return Fonts.loadAsync({
