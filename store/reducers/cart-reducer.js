@@ -21,7 +21,7 @@ const cartReducer = (state = initialState, action) => {
                     state.items[addedProduct.id].quantity + 1,
                     productTitle,
                     productPrice,
-                    state.totalAmount + productPrice)
+                    state.items[addedProduct.id].productPrice + productPrice)
             } else {
                 //we don't have the item in the cart
                 updatedOrNewCartItem = new CartItem(1, productTitle, productPrice, productPrice);

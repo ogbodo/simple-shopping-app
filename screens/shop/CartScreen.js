@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux'
 import { removeFromCart } from '../../store/actions/cart-action';
 import { addOrderAction } from '../../store/actions/order-action';
 
-const CartScreen = (props) => {
+const CartScreen = () => {
     const totalAmount = useSelector(state => state.cartReducer.totalAmount);
     const dispatch = useDispatch();
     const cartItems = useSelector(state => {

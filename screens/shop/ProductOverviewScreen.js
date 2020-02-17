@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react'
-import { FlatList, Platform, View,  StyleSheet } from 'react-native';
+import { FlatList, Platform, View, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/UI/HeaderButton';
 import { addToCart } from '../../store/actions/cart-action';
-import { loadProductAction } from '../../store/actions/product-action';
-import PRODUCTS from '../../data/dummy-data';
+import { fetchProducts } from '../../store/actions/product-action';
 import CartLabel from '../../components/UI/CartLabel';
 
 
 const ProductOverviewScreen = (props) => {
     const dispatch = useDispatch();
 
-    const availableProducts = useSelector(state => state.productReducer.availableProducts);
+    const availableProducts = useSelector(state => state.productReducer.products);
     const count = useSelector(state => {
         let counter = 0;
         for (const key in state.cartReducer.items) {
@@ -22,8 +21,8 @@ const ProductOverviewScreen = (props) => {
         return counter;
     });
     useEffect(() => {
-        dispatch(loadProductAction(PRODUCTS))
-    }, [PRODUCTS]);
+        dispatch(fetchProducts())
+    });
 
     useEffect(() => {
         props.navigation.setParams({ cartItemCount: count })
@@ -37,15 +36,18 @@ const ProductOverviewScreen = (props) => {
                 cartItemCount: count
             })
     }
-    return <FlatList data={availableProducts} renderItem={(itemData) => <ProductItem
-        imageUrl={itemData.item.imageUrl}
-        title={itemData.item.title}
-        price={itemData.item.price}
-        onViewDetail={onViewDetails.bind(this, itemData)}
-        onAddToCart={() => {
-            dispatch(addToCart(itemData.item))
-        }}
-    />} />;
+    return <View>
+        <FlatList data={availableProducts} renderItem={(itemData) =>
+            <ProductItem
+                imageUrl={itemData.item.imageUrl}
+                title={itemData.item.title}
+                price={itemData.item.price}
+                onViewDetail={onViewDetails.bind(this, itemData)}
+                onAddToCart={() => {
+                    dispatch(addToCart(itemData.item))
+                }} />}
+        />
+    </View>
 }
 
 ProductOverviewScreen.navigationOptions = (navData) => {
@@ -72,20 +74,6 @@ ProductOverviewScreen.navigationOptions = (navData) => {
 const styles = StyleSheet.create({
     headerLeft: {
         flexDirection: 'row'
-    },
-    labelContainer: {
-        backgroundColor: Platform.OS === 'android' ? 'white' : Colors.primaryColor,
-        marginRight: 20,
-        marginLeft: - 16,
-        height: '70%',
-        alignSelf: 'baseline',
-        borderRadius: 40
-
-    },
-    label: {
-        color: Platform.OS === 'ios' ? 'white' : Colors.primaryColor,
-        fontFamily: 'open-sans-bold',
-
     }
 })
 

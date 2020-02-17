@@ -78,13 +78,6 @@ const styles = StyleSheet.create({
     },
     headerLeft: {
         flexDirection: 'row'
-    },
-    label: {
-        color: Colors.accentColor,
-        fontFamily: 'open-sans-bold',
-        marginRight: 20,
-        marginLeft: - 16,
-        alignSelf: 'baseline'
     }
 });
 

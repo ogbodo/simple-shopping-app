@@ -1,19 +1,22 @@
-import PRODUCTS from '../../data/dummy-data';
+import { LOAD_PRODUCTS } from '../actions/product-action';
 
 const initialState = {
-    availableProducts: PRODUCTS,
-    userProducts: PRODUCTS.filter(product => product.ownerId === 'u1')
+    products: [],
 }
 
-const productReducer = (state = initialState, action) => {
-    // switch (action.type) {
-    //     case value:
+const productReducer = (state = initialState, action = {}) => {
 
-    //         break;
+    switch (action.type) {
 
-    //     default:
-    return state;
-    // }
+        case LOAD_PRODUCTS:
+            return {
+                ...state,
+                products: action.products
+            }
+
+        default:
+            return state;
+    }
 }
 
 export default productReducer;
