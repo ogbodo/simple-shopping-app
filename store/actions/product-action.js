@@ -1,14 +1,22 @@
-import PRODUCTS from "../../data/dummy-data";
+export const REMOVE_PRODUCT = 'REMOVE_PRODUCT';
+export const CREATE_PRODUCT = 'CREATE_PRODUCT';
+export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 
-export const LOAD_PRODUCTS = 'LOAD_PRODUCTS';
-
-export const addProductsAction = (products) => {
+export const createProductAction = (title, description, imageUrl, price) => {
     return {
-        type: LOAD_PRODUCTS,
-        products
+        type: CREATE_PRODUCT,
+        newProductData: { title, description, imageUrl, price }
     };
 }
 
-export const fetchProducts = () => {
-    return addProductsAction(PRODUCTS);
+export const updateProductAction = (id, title, description, imageUrl) => {
+    return {
+        type: UPDATE_PRODUCT,
+        productId: id,
+        updateProductData: { title, description, imageUrl }
+    };
+}
+
+export const removeProductAction = (productId) => {
+    return { type: REMOVE_PRODUCT, productId };
 }

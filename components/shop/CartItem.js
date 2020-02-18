@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     },
     mainText: {
         fontFamily: 'open-sans-bold',
-        fontSize: 16
+        fontSize: 12
     },
     quantity: {
         fontFamily: 'open-sans',

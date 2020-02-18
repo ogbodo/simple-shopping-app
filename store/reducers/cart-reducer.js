@@ -2,6 +2,7 @@ import PRODUCTS from '../../data/dummy-data';
 import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/cart-action';
 import CartItem from '../../models/cart-item';
 import { ADD_ORDER } from '../actions/order-action';
+import { REMOVE_PRODUCT } from '../actions/product-action';
 
 const initialState = {
     items: {},
@@ -56,6 +57,20 @@ const cartReducer = (state = initialState, action) => {
             }
         case ADD_ORDER:
             return initialState
+
+        case REMOVE_PRODUCT:
+            const foundProduct = state.items[action.productId];
+            if (!foundProduct) {
+                return state
+            }
+            const productTotalAmount = foundProduct.sum;
+            delete state.items[action.productId];
+
+            return {
+                ...state,
+                items: state.items,
+                totalAmount: state.totalAmount - productTotalAmount > 0 ? state.totalAmount - productTotalAmount : 0
+            }
 
         default:
             return state;

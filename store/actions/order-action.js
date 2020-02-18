@@ -1,5 +1,4 @@
 export const ADD_ORDER = 'ADD_ORDER';
-// export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 
 export const addOrderAction = (cartItem, totalAmount) => {
     return {
@@ -11,6 +10,3 @@ export const addOrderAction = (cartItem, totalAmount) => {
     };
 }
 
-// export const removeFromCart = (productId) => {
-//     return { type: REMOVE_FROM_CART, productId };
-// }
