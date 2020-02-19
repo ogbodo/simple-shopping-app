@@ -5,13 +5,14 @@ import Moment from 'moment'
 import CartItem from './CartItem';
 import { removeFromCart } from '../../store/actions/cart-action';
 import { useDispatch } from 'react-redux'
+import Card from '../UI/Card';
 const OrderItem = (props) => {
 
     const [showDetails, setShowDetails] = useState(false);
     const dispatch = useDispatch();
     Moment.locale('en')
     const formatedDate = Moment(props.date).format("MMM Do YY, h:mm");
-    return <View style={styles.orderItem}>
+    return <Card style={styles.orderItem}>
         <View style={styles.summary}>
             <Text style={styles.totalAmount}>${props.amount.toFixed(2)}</Text>
             <Text style={styles.date}>{formatedDate}</Text>
@@ -32,18 +33,11 @@ const OrderItem = (props) => {
                         }} />
                 })}
             </View>}
-    </View>
+    </Card>
 }
 
 const styles = StyleSheet.create({
     orderItem: {
-        shadowColor: 'black',
-        shadowOpacity: 0.26,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        elevation: 5,
-        borderRadius: 10,
-        backgroundColor: 'white',
         margin: 20,
         padding: 10,
         alignItems: 'center'
