@@ -13,13 +13,16 @@ const styles = StyleSheet.create({
         marginRight: 20,
         marginLeft: - 16,
         height: '70%',
-        alignSelf: 'baseline',
-        borderRadius: 40
+        borderRadius: 40,
+        width: '30%',
+        borderRadius: 50,
 
     },
     label: {
         color: Platform.OS === 'ios' ? 'white' : Colors.primaryColor,
-        fontFamily: 'open-sans-bold'
+        fontFamily: 'open-sans-bold',
+        textAlign: 'center'
+
 
     }
 })
