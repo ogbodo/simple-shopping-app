@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { View, StyleSheet, FlatList, Text, Button, Platform, Alert } from 'react-native'
+import { View, StyleSheet, FlatList, Text, Button, Platform, Alert, ActivityIndicator } from 'react-native'
 import ProductItem from "../../components/shop/ProductItem";
 import Colors from "../../constants/Colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -9,7 +9,8 @@ import showToast from "../../components/UI/toast";
 import { removeProductAction } from "../../store/actions/product-action";
 
 function UserProductScreen(props) {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const [isLoading, setIsLoading] = useState(false)
     const userProducts = useSelector(state => state.productReducer.userProducts);
     const [wasRemoved, setWasRemoved] = useState(false)
 
@@ -33,27 +34,26 @@ function UserProductScreen(props) {
             }
         ])
     }
-    return <View>{userProducts.length > 0 ?
-        <FlatList data={userProducts}
-            renderItem={(itemData) =>
-                <ProductItem
-                    imageUrl={itemData.item.imageUrl}
-                    title={itemData.item.title}
-                    price={itemData.item.price}
-                    onSelect={() => onEditProduct(itemData.item.id)}
-                    id={itemData.item.id}>
-                    <Button color={Colors.primaryColor} title='Edit'
-                        onPress={() => onEditProduct(itemData.item.id)} />
-                    <Button color={Colors.primaryColor} title='Remove' onPress={() => {
-                        onDeleteProduct(itemData.item.id)
-                    }} />
-                </ProductItem>}
-        /> :
-        <View>
-            <Text style={styles.emptyContainer}>No products found! Please add some.</Text>
+    if (!isLoading && userProducts.length === 0) {
+        return <View style={styles.centeredStyle}>
+            <Text style={styles.noProducts}>No products to display. Please start adding some!</Text>
         </View>
     }
-    </View>
+    return <FlatList data={userProducts}
+        renderItem={(itemData) =>
+            <ProductItem
+                imageUrl={itemData.item.imageUrl}
+                title={itemData.item.title}
+                price={itemData.item.price}
+                onSelect={() => onEditProduct(itemData.item.id)}
+                id={itemData.item.id}>
+                <Button color={Colors.primaryColor} title='Edit'
+                    onPress={() => onEditProduct(itemData.item.id)} />
+                <Button color={Colors.primaryColor} title='Remove' onPress={() => {
+                    onDeleteProduct(itemData.item.id)
+                }} />
+            </ProductItem>}
+    />
 }
 
 UserProductScreen.navigationOptions = navData => {
@@ -79,12 +79,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    emptyContainer: {
+    noProducts: {
         textAlign: 'center',
         fontFamily: 'open-sans',
-        color: Colors.priceColor,
-        alignContent: 'center',
-        marginTop: '50%'
+        color: Colors.priceColor
+    },
+    centeredStyle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20
     }
 });
 

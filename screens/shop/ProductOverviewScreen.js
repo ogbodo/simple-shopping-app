@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, Platform, View, StyleSheet, Text, Button } from 'react-native';
+import { FlatList, Platform, View, StyleSheet, Text, Button, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../../components/UI/HeaderButton';
 import { addToCart } from '../../store/actions/cart-action';
-import { fetchProducts, populateUserProducts } from '../../store/actions/product-action';
 import CartLabel from '../../components/UI/CartLabel';
 import showToast from '../../components/UI/toast';
 import Colors from '../../constants/Colors';
+import { fetchProductsAction } from '../../store/actions/product-action';
 
 
 const ProductOverviewScreen = (props) => {
     const dispatch = useDispatch();
     const [wasAdded, setWasAdded] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     useEffect(() => {
         if (wasAdded) {
             showToast();
@@ -28,12 +29,15 @@ const ProductOverviewScreen = (props) => {
         }
         return counter;
     });
-    // useEffect(() => {
-    //     dispatch(fetchProducts())
-    // });
-    // useEffect(() => {
-    //     dispatch(populateUserProducts())
-    // });
+    useEffect(() => {
+        const loadProducts = async () => {
+            setIsLoading(true)
+            await dispatch(fetchProductsAction())
+            setIsLoading(false)
+        }
+        loadProducts();
+    }, [dispatch]);
+
 
     useEffect(() => {
         props.navigation.setParams({ cartItemCount: count })
@@ -47,26 +51,33 @@ const ProductOverviewScreen = (props) => {
                 cartItemCount: count
             })
     }
-    return <View>{availableProducts.length > 0 ?
-        <FlatList data={availableProducts}
-            renderItem={(itemData) =>
-                <ProductItem
-                    imageUrl={itemData.item.imageUrl}
-                    title={itemData.item.title}
-                    price={itemData.item.price}
-                    onSelect={onViewDetails.bind(this, itemData)}
-                    id={itemData.item.id}>
-                    <Button color={Colors.primaryColor} title='View Details' onPress={onViewDetails.bind(this, itemData)} />
-                    <Button color={Colors.primaryColor} title='Add To Cart' onPress={() => {
-                        dispatch(addToCart(itemData.item));
-                        setWasAdded(true)
-                    }} />
-                </ProductItem>}
-        /> :
-        <View>
-            <Text style={styles.emptyContainer}>No products to display!</Text>
-        </View>}
-    </View>
+
+    if (isLoading) {
+        return <View style={styles.centeredStyle}>
+            <ActivityIndicator size='large' color={Colors.primaryColor} />
+        </View>
+    }
+    if (!isLoading && availableProducts.length === 0) {
+        return <View style={styles.centeredStyle}>
+            <Text style={styles.noProducts}>No products to display yet!</Text>
+        </View>
+    }
+    return <FlatList data={availableProducts}
+        renderItem={(itemData) =>
+            <ProductItem
+                imageUrl={itemData.item.imageUrl}
+                title={itemData.item.title}
+                price={itemData.item.price}
+                onSelect={onViewDetails.bind(this, itemData)}
+                id={itemData.item.id}>
+                <Button color={Colors.primaryColor} title='View Details' onPress={onViewDetails.bind(this, itemData)} />
+                <Button color={Colors.primaryColor} title='Add To Cart' onPress={() => {
+                    dispatch(addToCart(itemData.item));
+                    setWasAdded(true)
+                }} />
+            </ProductItem>}
+    />
+
 }
 
 ProductOverviewScreen.navigationOptions = (navData) => {
@@ -94,12 +105,16 @@ const styles = StyleSheet.create({
     headerLeft: {
         flexDirection: 'row'
     },
-    emptyContainer: {
+    noProducts: {
         textAlign: 'center',
         fontFamily: 'open-sans',
-        color: Colors.priceColor,
-        alignContent: 'center',
-        marginTop: '50%'
+        color: Colors.priceColor
+    },
+    centeredStyle: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20
     }
 })
 

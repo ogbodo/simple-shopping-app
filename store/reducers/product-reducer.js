@@ -1,18 +1,23 @@
-import { REMOVE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT } from '../actions/product-action';
+import { REMOVE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, FETCH_PRODUCT } from '../actions/product-action';
 import PRODUCTS from '../../data/dummy-data';
 import Product from '../../models/product';
 
 const initialState = {
-    products: PRODUCTS,
-    userProducts: PRODUCTS.filter(product => product.ownerId === 'u1')
+    products: [],
+    userProducts: []
 }
 
 const productReducer = (state = initialState, action = {}) => {
 
     switch (action.type) {
+        case FETCH_PRODUCT:
+            return {
+                products: action.products,
+                userProducts: action.products.filter(product => product.id !== action.productId)
+            }
         case CREATE_PRODUCT:
-            const { title, description, imageUrl, price } = action.newProductData;
-            const newProduct = new Product(new Date().toString(), 'u1', title, imageUrl, description, price);
+            const { id, title, description, imageUrl, price } = action.newProductData;
+            const newProduct = new Product(id, 'u1', title, imageUrl, description, price);
             return {
                 ...state,
                 products: state.products.concat(newProduct),

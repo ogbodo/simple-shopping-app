@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { createStore, combineReducers } from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import productReducer from './store/reducers/product-reducer';
 import cartReducer from './store/reducers/cart-reducer';
 import ShopNavigator from './navigation/ShopNavigator'
-import { AppLoading } from 'expo'
+import { AppLoading, } from 'expo'
 import * as Fonts from 'expo-font'
 import { enableScreens } from 'react-native-screens'
 // import { composeWithDevTools } from 'redux-devtools-extension'
 import orderReducer from './store/reducers/order-reducer';
+import ReduxThunk from 'redux-thunk'
 
 enableScreens(true);
 const rootReducer = combineReducers({ productReducer, cartReducer, orderReducer })
 // const store = createStore(rootReducer, composeWithDevTools());
-const store = createStore(rootReducer);
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFonts = () => {
   return Fonts.loadAsync({

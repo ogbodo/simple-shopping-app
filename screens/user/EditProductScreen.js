@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useReducer } from "react";
 import { useSelector, useDispatch } from 'react-redux'
-import { View, StyleSheet, Text, Platform, ScrollView, TextInput, Alert } from 'react-native'
+import { View, StyleSheet, Platform, ScrollView, Alert, KeyboardAvoidingView } from 'react-native'
 import Colors from "../../constants/Colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from '../../components/UI/HeaderButton';
@@ -90,81 +90,82 @@ const EditProductScreen = (props) => {
     }, [dispatchFormState]);
 
 
-    return <ScrollView>
-        <View style={styles.form}>
-            <Input
-                id='title'
-                label='Title'
-                errorText='Please enter a valid product title!'
-                autoCapitalize='sentences'
-                returnKeyType='next'
-                autoCorrect
-                onInputChange={inputChangeHandler}
-                initialValue={productId ? foundProduct.title : ''}
-                initiallyValid={productId ? true : false}
-                required
-                onEndEditing={() => {
-                    console.log("Editing...");
-                }}
-                onSubmitEditing={() => {
-                    console.log("submit Editing...");
-                }}
-
-            />
-            <Input
-                id='imageUrl'
-                label='Image Url'
-                errorText='Please enter a valid product image url!'
-                returnKeyType='next'
-                required
-                onInputChange={inputChangeHandler}
-                initialValue={productId ? foundProduct.imageUrl : ''}
-                initiallyValid={productId ? true : false}
-                onEndEditing={() => {
-                    console.log("Editing...");
-                }}
-                onSubmitEditing={() => {
-                    console.log("submit Editing...");
-                }}
-
-            />
-            {!productId && (
+    return <KeyboardAvoidingView style={{ flex: 1 }} behavior='padding' keyboardVerticalOffset='100'>
+        <ScrollView>
+            <View style={styles.form}>
                 <Input
-                    id='price'
-                    label='Price'
-                    required
-                    errorText='Please enter a valid product price!'
+                    id='title'
+                    label='Title'
+                    errorText='Please enter a valid product title!'
+                    autoCapitalize='sentences'
                     returnKeyType='next'
-                    keyboardType='decimal-pad'
+                    autoCorrect
                     onInputChange={inputChangeHandler}
-                    min={0.9}
-                    isNumeric
+                    initialValue={productId ? foundProduct.title : ''}
+                    initiallyValid={productId ? true : false}
+                    required
+                    onEndEditing={() => {
+
+                    }}
+                    onSubmitEditing={() => {
+
+                    }}
+
                 />
-            )}
-            <Input
-                id='description'
-                label='Description'
-                errorText='Please enter a valid product description!'
-                returnKeyType='next'
-                multiline
-                required
-                minLength={5}
-                autoCorrect
-                autoCapitalize='sentences'
-                onInputChange={inputChangeHandler}
-                initialValue={productId ? foundProduct.description : ''}
-                initiallyValid={productId ? true : false}
-                onEndEditing={() => {
-                    console.log("Editing...");
-                }}
-                onSubmitEditing={() => {
-                    console.log("submit Editing...");
-                }}
+                <Input
+                    id='imageUrl'
+                    label='Image Url'
+                    errorText='Please enter a valid product image url!'
+                    returnKeyType='next'
+                    required
+                    onInputChange={inputChangeHandler}
+                    initialValue={productId ? foundProduct.imageUrl : ''}
+                    initiallyValid={productId ? true : false}
+                    onEndEditing={() => {
 
-            />
-        </View>
-    </ScrollView >
+                    }}
+                    onSubmitEditing={() => {
 
+                    }}
+
+                />
+                {!productId && (
+                    <Input
+                        id='price'
+                        label='Price'
+                        required
+                        errorText='Please enter a valid product price!'
+                        returnKeyType='next'
+                        keyboardType='decimal-pad'
+                        onInputChange={inputChangeHandler}
+                        min={0.9}
+                        isNumeric
+                    />
+                )}
+                <Input
+                    id='description'
+                    label='Description'
+                    errorText='Please enter a valid product description!'
+                    returnKeyType='next'
+                    multiline
+                    required
+                    minLength={5}
+                    autoCorrect
+                    autoCapitalize='sentences'
+                    onInputChange={inputChangeHandler}
+                    initialValue={productId ? foundProduct.description : ''}
+                    initiallyValid={productId ? true : false}
+                    onEndEditing={() => {
+
+                    }}
+                    onSubmitEditing={() => {
+
+                    }}
+
+                />
+            </View>
+        </ScrollView >
+    </KeyboardAvoidingView>
 }
 
 EditProductScreen.navigationOptions = (navData) => {
