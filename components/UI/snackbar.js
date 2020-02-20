@@ -8,7 +8,7 @@ const showSnackbar = (message, actionText, callback) => {
         duration: WSnackBar.duration.INDEFINITE, //1.SHORT 2.LONG 3.INDEFINITE
         textColor: 'white',
         backgroundColor: Colors.priceColor,
-        actionText: actionText,
+        actionText: callback ? actionText : '',
         actionTextColor: Colors.primaryColor,
         actionClick: callback,
     }

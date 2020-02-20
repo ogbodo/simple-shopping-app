@@ -11,6 +11,7 @@ import OrdersScreen from '../screens/shop/OrdersScreen';
 import { Ionicons } from '@expo/vector-icons'
 import UserProductScreen from '../screens/user/UserProductScreen';
 import EditProductScreen from '../screens/user/EditProductScreen';
+import PayWithPaystack from '../components/UI/Paystack';
 
 const defaultNavOptions = {
     defaultNavigationOptions: {
@@ -29,7 +30,7 @@ const defaultNavOptions = {
 const productsNavigator = createStackNavigator({
     ProductOverview: ProductOverviewScreen,
     ProductDetail: ProductDetailScreen,
-    Cart: CartScreen   
+    Cart: CartScreen
 }, {
         navigationOptions: {
             drawerIcon: (drawerConfig) =>
@@ -40,7 +41,8 @@ const productsNavigator = createStackNavigator({
     });
 
 const OrdersNavigator = createStackNavigator({
-    Orders: OrdersScreen
+    Orders: OrdersScreen,
+    Paystack: PayWithPaystack
 }, {
         navigationOptions: {
             drawerIcon: (drawerConfig) =>

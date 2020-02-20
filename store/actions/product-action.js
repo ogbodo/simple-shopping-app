@@ -10,7 +10,7 @@ export const fetchProductsAction = () => {
     return async (dispatch) => {
         //Here now we can perform any async task
         try {
-            const response = await fetch('https://shopping-app-fc2b8.firebaseio.com/products.jdson');
+            const response = await fetch('https://shopping-app-fc2b8.firebaseio.com/products.json');
 
             if (!response.ok) {
                 // console.log(response);

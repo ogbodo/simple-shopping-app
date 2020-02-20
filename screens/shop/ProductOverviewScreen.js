@@ -47,7 +47,7 @@ const ProductOverviewScreen = (props) => {
 
     useEffect(() => {
         if (error) {
-            showSnackbar(error, 'Retry!', onRetryAgain);
+            showSnackbar(error, 'Retry!', loadProducts);
         }
     }, [error]);
 
@@ -63,9 +63,7 @@ const ProductOverviewScreen = (props) => {
                 cartItemCount: count
             })
     }
-    const onRetryAgain = () => {
-        console.log("RETRIED!");
-    }
+
 
 
     if (isLoading) {

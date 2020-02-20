@@ -1,27 +1,57 @@
-import PaystackWebView from 'react-native-paystack-webView'
-import React from 'react'
-import { View } from 'react-native'
-import Colors from '../../constants/Colors';
 
-const PayWithPaystack = (props) => {
+const paystackMarkup = (data) => {
+    // console.log("DATA", data);
 
-    return (
-        <View>
-            <PaystackWebView
-                buttonText='Complete Your Order'
-                paystackKey='pk_test_b6ff1e69b9f6983bfa479e67bff6f3f7cad03c94'
-                amount={props.amount}
-                billingEmail={props.email}
-                billingMobile={props.phone}
-                billingName={props.userName}
-                ActivityIndicatorColor={Colors.primaryColor}
-                onSuccess={props.onOrderSucceeded}
-                onCancel={props.onCancelOrder}
-            />
-        </View>
-    )
-
+    return {
+        html: `  
+      <!DOCTYPE html>
+      <html lang="en">
+              <head>
+                      <meta charset="UTF-8">
+                      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                      <!-- Latest compiled and minified CSS -->
+                      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+                      <!-- Fonts -->
+                      <link rel="dns-prefetch" href="//fonts.gstatic.com">
+                      <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+                      <title>SUBSCRIPTION</title>
+              </head>
+              <body  onload="payWithPaystack()" style="background-color:#fff;height:100vh ">
+                      <script src="https://js.paystack.co/v1/inline.js"></script>
+                      <script type="text/javascript">
+                              window.onload = payWithPaystack;
+                              function payWithPaystack(){
+                              var handler = PaystackPop.setup({ 
+                                key: '${data.PAYSTACK_KEY}',
+                                email: '${data.email}',
+                                amount: ${data.totalAmount}00,
+                                currency: "NGN",
+                                ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+                                metadata: {
+                                custom_fields: [
+                                        {
+                                        display_name:  '${data.email}',
+                                        variable_name:  '${data.userName}',
+                                        value:''
+                                        }
+                                ]
+                                },
+                                callback: function(response){
+                                      var resp = {event:'successful', transactionRef:response.reference};
+                                      postMessage(JSON.stringify(resp))
+                                },
+                                onClose: function(){
+                                   var resp = {event:'cancelled'};
+                                   postMessage(JSON.stringify(resp))
+                                }
+                                });
+                                handler.openIframe();
+                                }
+                      </script> 
+              </body>
+      </html> 
+      `}
 }
 
 
-export default PayWithPaystack;
+export default paystackMarkup;
