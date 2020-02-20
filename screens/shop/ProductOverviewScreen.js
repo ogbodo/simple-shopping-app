@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { FlatList, Platform, View, StyleSheet, Text, Button, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import ProductItem from '../../components/shop/ProductItem';
@@ -9,12 +9,14 @@ import CartLabel from '../../components/UI/CartLabel';
 import showToast from '../../components/UI/toast';
 import Colors from '../../constants/Colors';
 import { fetchProductsAction } from '../../store/actions/product-action';
+import showSnackbar from '../../components/UI/snackbar';
 
 
 const ProductOverviewScreen = (props) => {
     const dispatch = useDispatch();
     const [wasAdded, setWasAdded] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState()
     useEffect(() => {
         if (wasAdded) {
             showToast();
@@ -29,15 +31,25 @@ const ProductOverviewScreen = (props) => {
         }
         return counter;
     });
-    useEffect(() => {
-        const loadProducts = async () => {
-            setIsLoading(true)
+    const loadProducts = useCallback(async () => {
+        setIsLoading(true)
+        try {
             await dispatch(fetchProductsAction())
-            setIsLoading(false)
+        } catch (error) {
+            setError(error.message)
         }
+        setIsLoading(false)
+    }, [dispatch, setIsLoading, setError])
+
+    useEffect(() => {
         loadProducts();
     }, [dispatch]);
 
+    useEffect(() => {
+        if (error) {
+            showSnackbar(error, 'Retry!', onRetryAgain);
+        }
+    }, [error]);
 
     useEffect(() => {
         props.navigation.setParams({ cartItemCount: count })
@@ -51,12 +63,17 @@ const ProductOverviewScreen = (props) => {
                 cartItemCount: count
             })
     }
+    const onRetryAgain = () => {
+        console.log("RETRIED!");
+    }
+
 
     if (isLoading) {
         return <View style={styles.centeredStyle}>
             <ActivityIndicator size='large' color={Colors.primaryColor} />
         </View>
     }
+
     if (!isLoading && availableProducts.length === 0) {
         return <View style={styles.centeredStyle}>
             <Text style={styles.noProducts}>No products to display yet!</Text>

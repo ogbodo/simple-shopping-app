@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Button, FlatList, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Button, FlatList, ScrollView, Alert } from 'react-native'
 import { useSelector } from 'react-redux'
 import Colors from '../../constants/Colors';
 import CartItem from '../../components/shop/CartItem';
@@ -20,15 +20,23 @@ const CartScreen = () => {
             showToast()
         }
     }, [wasAdded])
+
+    const onOrderSucceeded = () => {
+
+    }
+    const onCancelOrder = () => {
+
+    }
+    const onPlaceOrder = () => {
+        dispatch(addOrderAction(cartItems, totalAmount))
+        setWasAdded(prevState => !prevState)
+    }
     return (<View style={styles.screen}>
         <Card style={styles.summary}>
             <Text style={styles.summaryText}>
                 Total: <Text style={styles.amount}>${totalAmount.toFixed(2)}</Text>
             </Text>
-            <Button title='Order Now' color={Colors.accentColor} disabled={cartItems.length === 0} onPress={() => {
-                dispatch(addOrderAction(cartItems, totalAmount))
-                setWasAdded(prevState => !prevState)
-            }} />
+            <Button title='Order Now' color={Colors.accentColor} disabled={cartItems.length === 0} onPress={onPlaceOrder} />
         </Card>
         {cartItems.length > 0 ?
             < ScrollView >
