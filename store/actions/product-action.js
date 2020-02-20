@@ -48,10 +48,10 @@ export const createProductAction = (title, description, imageUrl, price) => {
                 body: JSON.stringify({ title, description, imageUrl, price })
             });
 
-            const responseData = await response.json();
             if (!response.ok) {
                 throw new Error(response.statusText)
             }
+            const responseData = await response.json();
 
             dispatch({
                 type: CREATE_PRODUCT,
@@ -65,13 +65,31 @@ export const createProductAction = (title, description, imageUrl, price) => {
 }
 
 export const updateProductAction = (id, title, description, imageUrl) => {
-    return {
-        type: UPDATE_PRODUCT,
-        productId: id,
-        updateProductData: { title, description, imageUrl }
+    return async (dispatch) => {
+        //Here now we can perform any async task
+        await fetch(`https://shopping-app-fc2b8.firebaseio.com/products/${id}.json`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title, description, imageUrl })
+        });
+
+        dispatch({
+            type: UPDATE_PRODUCT,
+            productId: id,
+            updateProductData: { title, description, imageUrl }
+        });
+
     };
 }
 
 export const removeProductAction = (productId) => {
-    return { type: REMOVE_PRODUCT, productId };
+    return async (dispatch) => {
+        await fetch(`https://shopping-app-fc2b8.firebaseio.com/products/${productId}.json`, {
+            method: 'DELETE'
+        })
+
+        return dispatch({ type: REMOVE_PRODUCT, productId });
+    }
 }

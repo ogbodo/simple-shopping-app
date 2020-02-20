@@ -52,6 +52,14 @@ const ProductOverviewScreen = (props) => {
     }, [error]);
 
     useEffect(() => {
+        const willFocusListener = props.navigation.addListener('willFocus', loadProducts);
+
+        return () => {
+            willFocusListener.remove();
+        }
+    }, [loadProducts]);
+
+    useEffect(() => {
         props.navigation.setParams({ cartItemCount: count })
     }, [count]);
 
