@@ -17,7 +17,7 @@ const CartScreen = (props) => {
     const totalAmount = useSelector(state => state.cartReducer.totalAmount);
     const dispatch = useDispatch();
     const cartItems = useSelector(state => extractCartItems(state.cartReducer.items));
-    const [state, setState] = useState({ showModal: false, isLoading: true })
+    const [state, setState] = useState({ showModal: false, isLoading: false })
     const PAYSTACK_KEY = 'pk_test_b6ff1e69b9f6983bfa479e67bff6f3f7cad03c94'
 
 
@@ -57,6 +57,15 @@ const CartScreen = (props) => {
                 break;
         }
     }
+
+
+    const sendOrderHandler = async () => {
+        setState(prevState => { return { ...prevState, isLoading: true } })
+        await dispatch(addOrderAction(cartItems, totalAmount))
+        setState(prevState => { return { ...prevState, isLoading: false } })
+        setWasAdded(prevState => !prevState)
+
+    }
     return (
         <View style={styles.screen}>
             <Modal
@@ -85,15 +94,15 @@ const CartScreen = (props) => {
                 <Text style={styles.summaryText}>
                     Total: <Text style={styles.amount}>${totalAmount.toFixed(2)}</Text>
                 </Text>
-                <Button
-                    title='Order Now'
-                    color={Colors.accentColor}
-                    disabled={cartItems.length === 0}
-                    onPress={() => {
-                        dispatch(addOrderAction(cartItems, totalAmount))
-                        setWasAdded(prevState => !prevState)
-                        // setState(prevState => { return { ...prevState, showModal: true } })
-                    }} />
+                {state.isLoading ? <View style={styles.centeredStyle}>
+                    <ActivityIndicator size='large' color={Colors.primaryColor} />
+                </View> : <Button
+                        title='Order Now'
+                        color={Colors.accentColor}
+                        disabled={cartItems.length === 0}
+                        onPress={sendOrderHandler} />
+                }
+
             </Card>
             {cartItems.length > 0 ?
                 < ScrollView >
